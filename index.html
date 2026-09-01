@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0,
+      maximum-scale=1.0, user-scalable=no">
+
+<title>AURAWRK — Create Your Aura</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    margin: 0;
+    background: #090909;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+header {
+    padding: 22px 20px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: -1px;
+}
+
+.tagline {
+    font-size: 9px;
+    letter-spacing: 2px;
+    opacity: .55;
+    margin-top: 3px;
+}
+
+.credits {
+    background: #151515;
+    border: 1px solid #292929;
+    border-radius: 20px;
+    padding: 9px 13px;
+    font-size: 12px;
+}
+
+main {
+    padding: 10px 16px 100px;
+}
+
+h1 {
+    font-size: 34px;
+    line-height: .95;
+    margin: 20px 0 8px;
+    letter-spacing: -2px;
+}
+
+.subtitle {
+    color: #888;
+    font-size: 13px;
+    margin-bottom: 20px;
+}
+
+.tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 18px;
+}
+
+.tab {
+    flex: 1;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #292929;
+    background: #111;
+    color: #777;
+    text-align: center;
+    font-weight: 700;
+}
+
+.tab.active {
+    color: white;
+    border-color: white;
+}
+
+.stage {
+    position: relative;
+    width: 100%;
+    max-width: 430px;
+    aspect-ratio: 1 / 1.08;
+    margin: auto;
+    border-radius: 24px;
+    overflow: hidden;
+    background:
+        radial-gradient(
+            circle at 50% 35%,
+            #303030,
+            #111 50%,
+            #080808
+        );
+    border: 1px solid #252525;
+    box-shadow:
+        inset 0 0 70px rgba(255,255,255,.04),
+        0 20px 70px rgba(0,0,0,.5);
+}
+
+/* Realistic-looking shirt */
+
+.shirt {
+    position: absolute;
+    width: 72%;
+    height: 76%;
+    left: 14%;
+    top: 11%;
+
+    background:
+        linear-gradient(
+            110deg,
+            #222 0%,
+            #555 18%,
+            #252525 38%,
+            #111 55%,
+            #444 76%,
+            #171717 100%
+        );
+
+    clip-path: polygon(
+        31% 0%,
+        69% 0%,
+        83% 13%,
+        100% 28%,
+        88% 43%,
+        75% 35%,
+        75% 100%,
+        25% 100%,
+        25% 35%,
+        12% 43%,
+        0% 28%,
+        17% 13%
+    );
+
+    filter:
+        drop-shadow(0 25px 22px rgba(0,0,0,.65));
+
+    overflow: hidden;
+}
+
+/* Fabric highlights */
+
+.shirt::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent 10%,
+            rgba(255,255,255,.10) 25%,
+            transparent 38%,
+            rgba(255,255,255,.06) 53%,
+            transparent 70%
+        );
+
+    opacity: .8;
+}
+
+/* Fabric folds */
+
+.shirt::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background:
+        repeating-linear-gradient(
+            105deg,
+            transparent 0px,
+            transparent 24px,
+            rgba(0,0,0,.18) 27px,
+            transparent 31px
+        );
+
+    opacity: .65;
+}
+
+.collar {
+    position: absolute;
+    z-index: 5;
+    width: 28%;
+    height: 9%;
+    left: 36%;
+    top: 1%;
+    border-radius: 50%;
+    border: 7px solid #111;
+    background: transparent;
+}
+
+.design {
+    position: absolute;
+    z-index: 10;
+    width: 110px;
+    left: 50%;
+    top: 42%;
+    transform:
+        translate(-50%, -50%)
+        rotate(0deg);
+
+    display: none;
+    touch-action: none;
+    user-select: none;
+}
+
+/* Controls */
+
+.panel {
+    margin-top: 18px;
+    padding: 16px;
+    border-radius: 18px;
+    background: #111;
+    border: 1px solid #242424;
+}
+
+.panel-title {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: #777;
+    margin-bottom: 12px;
+}
+
+input[type="file"] {
+    width: 100%;
+    color: #aaa;
+}
+
+.colors {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.color {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid #333;
+}
+
+.color.active {
+    border-color: white;
+}
+
+button {
+    width: 100%;
+    padding: 15px;
+    margin-top: 10px;
+    border: 0;
+    border-radius: 13px;
+    background: white;
+    color: black;
+    font-weight: 900;
+    font-size: 13px;
+}
+
+button.secondary {
+    background: #1a1a1a;
+    color: white;
+    border: 1px solid #303030;
+}
+
+.pro {
+    margin-top: 18px;
+    padding: 18px;
+    border-radius: 18px;
+    background: linear-gradient(
+        135deg,
+        #171717,
+        #0c0c0c
+    );
+    border: 1px solid #303030;
+}
+
+.pro-title {
+    font-size: 20px;
+    font-weight: 900;
+}
+
+.pro p {
+    color: #888;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+footer {
+    text-align: center;
+    color: #444;
+    font-size: 10px;
+    padding: 30px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div>
+    <div class="logo">AURAWRK</div>
+    <div class="tagline">CREATE YOUR AURA</div>
+</div>
+
+<div class="credits">
+    AURA <strong id="creditCount">5</strong>/5
+</div>
+
+</header>
+
+<main>
+
+<h1>BUILD<br>YOUR AURA.</h1>
+
+<div class="subtitle">
+Create clothing concepts before they become real.
+</div>
+
+<div class="tabs">
+    <div class="tab active" onclick="selectGarment('tshirt', this)">
+        T-SHIRT
+    </div>
+
+    <div class="tab" onclick="selectGarment('longsleeve', this)">
+        LONG SLEEVE
+    </div>
+</div>
+
+<div class="stage" id="stage">
+
+    <div class="shirt" id="shirt">
+        <div class="collar"></div>
+
+        <img
+            id="design"
+            class="design"
+            draggable="false"
+        >
+    </div>
+
+</div>
+
+<div class="panel">
+
+<div class="panel-title">
+DESIGN
+</div>
+
+<input
+    type="file"
+    id="upload"
+    accept="image/png,image/jpeg,image/webp"
+>
+
+<button
+    class="secondary"
+    onclick="resetDesign()">
+    RESET DESIGN
+</button>
+
+</div>
+
+<div class="panel">
+
+<div class="panel-title">
+GARMENT COLOR
+</div>
+
+<div class="colors">
+
+<div
+ class="color active"
+ style="background:#222"
+ onclick="changeColor('#222',this)">
+</div>
+
+<div
+ class="color"
+ style="background:#fff"
+ onclick="changeColor('#eee',this)">
+</div>
+
+<div
+ class="color"
+ style="background:#161b2d"
+ onclick="changeColor('#161b2d',this)">
+</div>
+
+<div
+ class="color"
+ style="background:#523b32"
+ onclick="changeColor('#523b32',this)">
+</div>
+
+<div
+ class="color"
+ style="background:#263c2c"
+ onclick="changeColor('#263c2c',this)">
+</div>
+
+</div>
+
+</div>
+
+<div class="panel">
+
+<div class="panel-title">
+DESIGN SCALE
+</div>
+
+<input
+    type="range"
+    id="scale"
+    min="60"
+    max="180"
+    value="110"
+    style="width:100%"
+>
+
+<div class="panel-title" style="margin-top:15px">
+ROTATION
+</div>
+
+<input
+    type="range"
+    id="rotation"
+    min="-20"
+    max="20"
+    value="0"
+    style="width:100%"
+>
+
+</div>
+
+<button onclick="createMockup()">
+CREATE MOCKUP — 1 AURA CREDIT
+</button>
+
+<div class="pro">
+
+<div class="pro-title">
+UNLIMITED AURA
+</div>
+
+<p>
+Unlimited mockups. Premium garments.
+HD exports. Unlimited projects.
+No ads.
+</p>
+
+<button>
+UPGRADE — $9.99 / MONTH
+</button>
+
+</div>
+
+</main>
+
+<footer>
+AURAWRK — CREATE YOUR AURA
+</footer>
+
+<script>
+
+let credits = 5;
+
+const design = document.getElementById("design");
+const shirt = document.getElementById("shirt");
+
+document.getElementById("upload")
+.addEventListener("change", function(e) {
+
+    const file = e.target.files[0];
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+
+        design.src = event.target.result;
+        design.style.display = "block";
+
+    };
+
+    reader.readAsDataURL(file);
+
+});
+
+
+document.getElementById("scale")
+.addEventListener("input", function() {
+
+    design.style.width = this.value + "px";
+
+});
+
+
+document.getElementById("rotation")
+.addEventListener("input", function() {
+
+    const currentX =
+        design.dataset.x || 0;
+
+    const currentY =
+        design.dataset.y || 0;
+
+    design.style.transform =
+        `translate(calc(-50% + ${currentX}px),
+                   calc(-50% + ${currentY}px))
+         rotate(${this.value}deg)`;
+
+});
+
+
+function changeColor(color, element) {
+
+    shirt.style.background =
+        `linear-gradient(
+            110deg,
+            ${color},
+            #777,
+            ${color},
+            #111,
+            ${color}
+        )`;
+
+    document.querySelectorAll(".color")
+        .forEach(x => x.classList.remove("active"));
+
+    element.classList.add("active");
+
+}
+
+
+function resetDesign() {
+
+    design.style.display = "none";
+    design.src = "";
+
+}
+
+
+function selectGarment(type, element) {
+
+    document.querySelectorAll(".tab")
+        .forEach(x => x.classList.remove("active"));
+
+    element.classList.add("active");
+
+    if (type === "longsleeve") {
+
+        shirt.style.clipPath =
+        "polygon(30% 0%,70% 0%,84% 12%,100% 20%,95% 70%,82% 68%,75% 38%,75% 100%,25% 100%,25% 38%,18% 68%,5% 70%,0% 20%,16% 12%)";
+
+    } else {
+
+        shirt.style.clipPath =
+        "polygon(31% 0%,69% 0%,83% 13%,100% 28%,88% 43%,75% 35%,75% 100%,25% 100%,25% 35%,12% 43%,0% 28%,17% 13%)";
+
+    }
+
+}
+
+
+function createMockup() {
+
+    if (credits <= 0) {
+
+        alert(
+            "Your AURA CREDITS are gone. Come back tomorrow or upgrade to UNLIMITED AURA."
+        );
+
+        return;
+
+    }
+
+    if (!design.src) {
+
+        alert("Upload a design first.");
+
+        return;
+
+    }
+
+    credits--;
+
+    document.getElementById("creditCount")
+        .textContent = credits;
+
+    alert(
+        "Mockup created! " +
+        credits +
+        " AURA CREDITS remaining."
+    );
+
+}
+
+
+/* Drag artwork */
+
+let dragging = false;
+let startX = 0;
+let startY = 0;
+let originalX = 0;
+let originalY = 0;
+
+design.addEventListener("pointerdown", function(e) {
+
+    dragging = true;
+
+    startX = e.clientX;
+    startY = e.clientY;
+
+    originalX =
+        parseFloat(design.dataset.x || 0);
+
+    originalY =
+        parseFloat(design.dataset.y || 0);
+
+    design.setPointerCapture(e.pointerId);
+
+});
+
+
+design.addEventListener("pointermove", function(e) {
+
+    if (!dragging) return;
+
+    const dx =
+        e.clientX - startX;
+
+    const dy =
+        e.clientY - startY;
+
+    const x =
+        originalX + dx;
+
+    const y =
+        originalY + dy;
+
+    design.dataset.x = x;
+    design.dataset.y = y;
+
+    const rotation =
+        document.getElementById("rotation").value;
+
+    design.style.transform =
+        `translate(
+            calc(-50% + ${x}px),
+            calc(-50% + ${y}px)
+        )
+        rotate(${rotation}deg)`;
+
+});
+
+
+design.addEventListener("pointerup", function() {
+
+    dragging = false;
+
+});
+
+</script>
+
+</body>
+</html>
