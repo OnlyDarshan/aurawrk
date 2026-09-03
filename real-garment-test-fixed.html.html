@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no, maximum-scale=1" />
+<title>AURAWRK — Real Product Garment Test</title>
+<style>
+:root{--bg:#09090d;--panel:#111118;--line:#262633;--muted:#8f8fa1;--text:#f5f5f7;--accent:#8b5cf6;--accent2:#b794f6}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overscroll-behavior:none}
+body{touch-action:manipulation}
+.app{min-height:100%;display:flex;flex-direction:column}
+header{height:62px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);background:rgba(9,9,13,.94);backdrop-filter:blur(14px);position:sticky;top:0;z-index:10}
+.brand{font-weight:900;letter-spacing:.16em;font-size:16px}.tag{font-size:10px;color:var(--muted);letter-spacing:.16em}
+.badge{font-size:11px;padding:7px 10px;border:1px solid #3b325a;border-radius:999px;background:#171321;color:#d9ccff;font-weight:700}
+.main{display:grid;grid-template-columns:300px 1fr;min-height:calc(100vh - 62px)}
+.sidebar{border-right:1px solid var(--line);padding:16px;background:linear-gradient(180deg,#101015,#0c0c11);overflow:auto}
+.section{padding:14px 0;border-bottom:1px solid var(--line)}.section:last-child{border-bottom:0}
+.kicker{font-size:10px;letter-spacing:.18em;color:#a78bfa;font-weight:800;margin-bottom:10px}.label{font-size:12px;color:#c7c7d4;margin-bottom:8px}
+.row{display:flex;gap:8px;flex-wrap:wrap}.btn,.chip{appearance:none;border:1px solid #343445;background:#17171f;color:#ececf2;border-radius:10px;padding:10px 12px;font-size:12px;font-weight:700;cursor:pointer;touch-action:manipulation}.btn:active,.chip:active{transform:scale(.98)}.btn.accent{background:linear-gradient(180deg,#8b5cf6,#7046dd);border-color:#9d7cff;color:white}.chip.active{border-color:#8b5cf6;background:#201a31}.chip.locked{opacity:.45}
+.swatches{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}.swatch{aspect-ratio:1;border-radius:8px;border:2px solid #3b3b46;cursor:pointer}.swatch.active{outline:2px solid #9d7cff;outline-offset:2px}
+input[type=file]{display:none}.upload{display:block;width:100%;text-align:center;padding:12px;border:1px dashed #4a4263;border-radius:12px;background:#14121a;color:#ddd3ff;font-size:12px;font-weight:800;cursor:pointer}
+.range{width:100%;accent-color:#8b5cf6}
+.status{font-size:11px;line-height:1.45;color:var(--muted);background:#111118;border:1px solid var(--line);padding:10px;border-radius:10px}
+.stageWrap{position:relative;min-height:calc(100vh - 62px);display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 40%,#24242c 0,#17171d 30%,#0e0e13 68%,#09090d 100%);overflow:hidden}
+#stage{width:100%;height:100%;position:absolute;inset:0;touch-action:none}
+.hint{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);z-index:3;background:rgba(12,12,17,.78);border:1px solid #343442;border-radius:999px;padding:9px 13px;font-size:11px;color:#c8c8d3;backdrop-filter:blur(10px);pointer-events:none}
+.topControls{position:absolute;top:16px;right:16px;z-index:4;display:flex;gap:8px}.mini{border:1px solid #383847;background:rgba(17,17,24,.88);color:#eee;border-radius:10px;padding:9px 11px;font-size:11px;font-weight:800;touch-action:manipulation}
+.loading{position:absolute;z-index:5;text-align:center}.loading strong{display:block;font-size:18px;letter-spacing:.04em}.loading span{display:block;margin-top:6px;color:var(--muted);font-size:12px}.spinner{width:28px;height:28px;border:3px solid #2c2c36;border-top-color:#8b5cf6;border-radius:50%;margin:0 auto 12px;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.error{max-width:420px;padding:16px;border:1px solid #5a3344;background:#1a1015;border-radius:12px;color:#ffd6df;font-size:13px;line-height:1.5}
+@media(max-width:800px){header{height:56px}.main{display:block;min-height:calc(100vh - 56px)}.sidebar{border-right:0;border-bottom:1px solid var(--line);padding:12px}.sidebar .section{padding:10px 0}.stageWrap{height:68vh;min-height:500px}.swatches{grid-template-columns:repeat(8,1fr)}.tag{display:none}.topControls{top:10px;right:10px}.hint{bottom:12px;width:max-content;max-width:92%;text-align:center}}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div><div class="brand">AURAWRK</div><div class="tag">CREATE YOUR AURA.</div></div><div class="badge">REAL GARMENT TEST</div></header>
+<div class="main">
+<aside class="sidebar">
+  <div class="section"><div class="kicker">01 — GARMENT</div><div class="row"><button class="chip active" id="teeBtn">T-SHIRT</button><button class="chip locked">HOODIE · NEXT</button></div></div>
+  <div class="section"><div class="kicker">02 — COLOR</div><div class="swatches" id="swatches"></div></div>
+  <div class="section"><div class="kicker">03 — DESIGN</div><label class="upload" for="designInput">UPLOAD ARTWORK</label><input id="designInput" type="file" accept="image/png,image/jpeg,image/webp"/><div style="height:10px"></div><div class="label">Print size</div><input class="range" id="designScale" type="range" min="20" max="100" value="52"><div class="label" style="margin-top:10px">Print vertical position</div><input class="range" id="designY" type="range" min="-40" max="40" value="2"></div>
+  <div class="section"><div class="kicker">04 — VIEW</div><div class="row"><button class="btn" id="frontBtn">FRONT</button><button class="btn" id="backBtn">BACK</button><button class="btn" id="leftBtn">LEFT</button><button class="btn" id="rightBtn">RIGHT</button></div></div>
+  <div class="section"><div class="kicker">05 — PRODUCT LIGHT</div><div class="label">Studio brightness</div><input class="range" id="lightRange" type="range" min="35" max="150" value="95"></div>
+  <div class="section"><div class="status" id="status">Loading real 3D garment engine…</div></div>
+</aside>
+<section class="stageWrap">
+  <div id="stage"></div>
+  <div class="loading" id="loading"><div class="spinner"></div><strong>BUILDING GARMENT</strong><span>Real 3D mesh + fabric material</span></div>
+  <div class="topControls"><button class="mini" id="resetBtn">RESET VIEW</button></div>
+  <div class="hint">Drag shirt to rotate · pinch to zoom</div>
+</section>
+</div>
+</div>
+<script type="module">
+const statusEl=document.getElementById('status'), loading=document.getElementById('loading');
+function fail(msg){loading.innerHTML='<div class="error"><strong>3D engine did not load.</strong><br>'+msg+'<br><br>This build uses one direct Three.js module and native touch controls. If this appears, send me the exact error text.</div>';statusEl.textContent='ENGINE ERROR — '+msg;}
+try{
+  const THREE=await import('https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js');
+  const container=document.getElementById('stage');
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(30,1,.1,100); camera.position.set(0,.2,8.5);
+  const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,preserveDrawingBuffer:true}); renderer.setPixelRatio(Math.min(devicePixelRatio,2)); renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap; renderer.outputColorSpace=THREE.SRGBColorSpace; renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.1; container.appendChild(renderer.domElement);
+
+  // Studio lights
+  const hemi=new THREE.HemisphereLight(0xffffff,0x323244,1.45); scene.add(hemi);
+  const key=new THREE.DirectionalLight(0xffffff,5.0); key.position.set(-3.5,5.5,5); key.castShadow=true; key.shadow.mapSize.set(1024,1024); scene.add(key);
+  const fill=new THREE.DirectionalLight(0xc5b7ff,2.0); fill.position.set(4,1.5,4); scene.add(fill);
+  const rim=new THREE.DirectionalLight(0xffffff,2.2); rim.position.set(0,3,-5); scene.add(rim);
+
+  // floor/shadow
+  const floorMat=new THREE.ShadowMaterial({color:0x000000,opacity:.30}); const floor=new THREE.Mesh(new THREE.PlaneGeometry(20,20),floorMat); floor.rotation.x=-Math.PI/2; floor.position.y=-2.8; floor.receiveShadow=true; scene.add(floor);
+
+  // Procedural fabric texture
+  const c=document.createElement('canvas');c.width=c.height=256;const ctx=c.getContext('2d');ctx.fillStyle='#bdbdbd';ctx.fillRect(0,0,256,256);for(let i=0;i<14000;i++){const g=150+Math.random()*80;ctx.fillStyle=`rgba(${g},${g},${g},${.08+Math.random()*.12})`;ctx.fillRect(Math.random()*256,Math.random()*256,1,1)}for(let y=0;y<256;y+=3){ctx.fillStyle='rgba(255,255,255,.035)';ctx.fillRect(0,y,256,1)}
+  const fabricTex=new THREE.CanvasTexture(c); fabricTex.wrapS=fabricTex.wrapT=THREE.RepeatWrapping; fabricTex.repeat.set(4,4);
+  const mat=new THREE.MeshPhysicalMaterial({color:0xf0f0ec,roughness:.86,metalness:0,clearcoat:.02,clearcoatRoughness:1,bumpMap:fabricTex,bumpScale:.055,sheen:1,sheenRoughness:.95,sheenColor:new THREE.Color(0xffffff)});
+
+  const garment=new THREE.Group(); garment.rotation.x=-0.03; scene.add(garment);
+
+  // Torso shape with shoulder taper and curved hem, extruded for real depth
+  const torsoShape=new THREE.Shape();
+  torsoShape.moveTo(-1.52,2.05); torsoShape.bezierCurveTo(-1.35,2.32,-.9,2.47,-.57,2.5); torsoShape.bezierCurveTo(-.35,2.18,.35,2.18,.57,2.5); torsoShape.bezierCurveTo(.9,2.47,1.35,2.32,1.52,2.05); torsoShape.lineTo(1.38,-2.15); torsoShape.bezierCurveTo(.85,-2.30,-.85,-2.30,-1.38,-2.15); torsoShape.closePath();
+  const torsoGeo=new THREE.ExtrudeGeometry(torsoShape,{depth:.42,bevelEnabled:true,bevelSegments:5,steps:1,bevelSize:.12,bevelThickness:.12,curveSegments:32}); torsoGeo.translate(0,0,-.21);
+  const torso=new THREE.Mesh(torsoGeo,mat); torso.castShadow=true; torso.receiveShadow=true; garment.add(torso);
+
+  function sleeve(side){const s=new THREE.Shape();const x=side; if(side<0){s.moveTo(-1.45,2.15);s.lineTo(-2.65,1.55);s.bezierCurveTo(-2.92,1.25,-2.9,.75,-2.58,.55);s.lineTo(-1.62,.92);s.closePath();}else{s.moveTo(1.45,2.15);s.lineTo(2.65,1.55);s.bezierCurveTo(2.92,1.25,2.9,.75,2.58,.55);s.lineTo(1.62,.92);s.closePath();}const g=new THREE.ExtrudeGeometry(s,{depth:.38,bevelEnabled:true,bevelSegments:4,bevelSize:.10,bevelThickness:.10,curveSegments:20});g.translate(0,0,-.19);const m=new THREE.Mesh(g,mat);m.castShadow=true;m.receiveShadow=true;garment.add(m);}
+  sleeve(-1); sleeve(1);
+
+  // collar rings front/back for thickness
+  const collarMat=mat.clone(); collarMat.color.copy(mat.color).multiplyScalar(.93);
+  const collar=new THREE.Mesh(new THREE.TorusGeometry(.46,.10,16,64),collarMat); collar.scale.y=.72; collar.position.set(0,2.38,.25); collar.rotation.x=.18; garment.add(collar);
+  const collarBack=collar.clone(); collarBack.position.z=-.25; collarBack.rotation.x=-.18; garment.add(collarBack);
+
+  // subtle seam lines
+  const seamMat=new THREE.MeshBasicMaterial({color:0x777777,transparent:true,opacity:.20});
+  const hem=new THREE.Mesh(new THREE.CylinderGeometry(1.32,1.32,.02,64,1,true),seamMat); hem.scale.z=.28; hem.rotation.z=Math.PI/2; hem.position.set(0,-2.10,.24); garment.add(hem);
+
+  // Print plane attached to chest, slightly curved with segmented geometry
+  const printCanvas=document.createElement('canvas'); printCanvas.width=1024; printCanvas.height=1024; const pctx=printCanvas.getContext('2d'); pctx.clearRect(0,0,1024,1024); pctx.fillStyle='rgba(0,0,0,0)'; pctx.fillRect(0,0,1024,1024); pctx.fillStyle='#111'; pctx.font='900 92px Arial'; pctx.textAlign='center';pctx.fillText('AURAWRK',512,420);pctx.font='700 34px Arial';pctx.fillText('CREATE YOUR AURA',512,485);
+  const printTex=new THREE.CanvasTexture(printCanvas); printTex.colorSpace=THREE.SRGBColorSpace;
+  const printMat=new THREE.MeshBasicMaterial({map:printTex,transparent:true,depthWrite:false,alphaTest:.02});
+  const printGeo=new THREE.PlaneGeometry(2.15,2.15,20,20); const pos=printGeo.attributes.position; for(let i=0;i<pos.count;i++){const x=pos.getX(i); pos.setZ(i,-.055*x*x + .09);} printGeo.computeVertexNormals();
+  const printMesh=new THREE.Mesh(printGeo,printMat); printMesh.position.set(0,.35,.47); garment.add(printMesh);
+
+  const colors=['#f0f0ec','#111111','#5f6670','#8f1d27','#343a74','#516344','#c7b9a7','#8a6aa8']; const sw=document.getElementById('swatches'); colors.forEach((col,i)=>{const b=document.createElement('button');b.className='swatch'+(i===0?' active':'');b.style.background=col;b.addEventListener('click',()=>{document.querySelectorAll('.swatch').forEach(x=>x.classList.remove('active'));b.classList.add('active');mat.color.set(col);collarMat.color.set(col).multiplyScalar(.93)});sw.appendChild(b)});
+
+  let uploadedImg=null;
+  document.getElementById('designInput').addEventListener('change',e=>{const f=e.target.files?.[0]; if(!f)return; const img=new Image(); img.onload=()=>{uploadedImg=img; redrawPrint(); URL.revokeObjectURL(img.src);}; img.src=URL.createObjectURL(f)});
+  function redrawPrint(){pctx.clearRect(0,0,1024,1024); if(uploadedImg){const ar=uploadedImg.width/uploadedImg.height; let w=680,h=680; if(ar>1)h=w/ar; else w=h*ar; pctx.drawImage(uploadedImg,(1024-w)/2,(1024-h)/2,w,h);} else {pctx.fillStyle='#111';pctx.font='900 92px Arial';pctx.textAlign='center';pctx.fillText('AURAWRK',512,420);pctx.font='700 34px Arial';pctx.fillText('CREATE YOUR AURA',512,485);} printTex.needsUpdate=true;}
+  document.getElementById('designScale').addEventListener('input',e=>{const s=Number(e.target.value)/52;printMesh.scale.setScalar(s)});
+  document.getElementById('designY').addEventListener('input',e=>{printMesh.position.y=.35+Number(e.target.value)/45});
+  // Native touch / pointer controls — no OrbitControls dependency
+  let targetRotY=0, targetRotX=-0.03, rotY=0, rotX=-0.03;
+  let zoom=8.5, targetZoom=8.5;
+  let dragging=false, lastX=0, lastY=0;
+  const activePointers=new Map();
+  let pinchStart=0, pinchZoomStart=8.5;
+
+  const canvas=renderer.domElement;
+  canvas.style.touchAction='none';
+  canvas.addEventListener('pointerdown',e=>{
+    canvas.setPointerCapture?.(e.pointerId);
+    activePointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(activePointers.size===1){dragging=true;lastX=e.clientX;lastY=e.clientY;}
+    if(activePointers.size===2){
+      const pts=[...activePointers.values()];
+      pinchStart=Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y);
+      pinchZoomStart=targetZoom; dragging=false;
+    }
+  },{passive:false});
+  canvas.addEventListener('pointermove',e=>{
+    if(!activePointers.has(e.pointerId)) return;
+    activePointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(activePointers.size===2){
+      const pts=[...activePointers.values()];
+      const d=Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y);
+      if(pinchStart>0){targetZoom=Math.max(5.2,Math.min(12,pinchZoomStart*(pinchStart/d)));}
+      e.preventDefault(); return;
+    }
+    if(dragging){
+      const dx=e.clientX-lastX, dy=e.clientY-lastY;
+      targetRotY += dx*0.012;
+      targetRotX += dy*0.007;
+      targetRotX=Math.max(-0.55,Math.min(0.38,targetRotX));
+      lastX=e.clientX; lastY=e.clientY;
+      e.preventDefault();
+    }
+  },{passive:false});
+  function endPointer(e){
+    activePointers.delete(e.pointerId);
+    if(activePointers.size===0){dragging=false;pinchStart=0;}
+    if(activePointers.size===1){const p=[...activePointers.values()][0];lastX=p.x;lastY=p.y;dragging=true;}
+  }
+  canvas.addEventListener('pointerup',endPointer,{passive:false});
+  canvas.addEventListener('pointercancel',endPointer,{passive:false});
+  canvas.addEventListener('wheel',e=>{targetZoom=Math.max(5.2,Math.min(12,targetZoom+e.deltaY*0.006));e.preventDefault();},{passive:false});
+
+  const view=(y)=>{targetRotY=y;};
+  document.getElementById('frontBtn').onclick=()=>view(0);
+  document.getElementById('backBtn').onclick=()=>view(Math.PI);
+  document.getElementById('leftBtn').onclick=()=>view(-Math.PI/2);
+  document.getElementById('rightBtn').onclick=()=>view(Math.PI/2);
+  document.getElementById('resetBtn').onclick=()=>{targetRotY=0;targetRotX=-0.03;targetZoom=8.5;};
+  document.getElementById('lightRange').addEventListener('input',e=>{renderer.toneMappingExposure=Number(e.target.value)/86});
+
+  function resize(){const r=container.getBoundingClientRect();renderer.setSize(r.width,r.height,false);camera.aspect=r.width/r.height;camera.updateProjectionMatrix()} addEventListener('resize',resize);resize();
+  function animate(){
+    requestAnimationFrame(animate);
+    rotY += (targetRotY-rotY)*0.12;
+    rotX += (targetRotX-rotX)*0.12;
+    zoom += (targetZoom-zoom)*0.12;
+    garment.rotation.y=rotY; garment.rotation.x=rotX; camera.position.z=zoom;
+    camera.lookAt(0,.1,0);
+    renderer.render(scene,camera);
+  } animate();
+  loading.remove(); statusEl.textContent='ENGINE READY — real 3D mesh loaded. Drag the garment to rotate.';
+}catch(err){console.error(err);fail(err?.message||String(err));}
+</script>
+</body>
+</html>
