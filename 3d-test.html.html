@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>AURAWRK GitHub Rotation Test</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#0a0a0d;color:#fff;font-family:Arial,Helvetica,sans-serif}body{min-height:100vh;display:flex;justify-content:center;align-items:center;padding:12px}.app{width:min(100%,760px)}.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.brand{font-weight:900;letter-spacing:.18em}.brand span{color:#9a6cff}.badge{font-size:12px;color:#cfc8df;border:1px solid #2d2938;border-radius:999px;padding:7px 10px}.stage{position:relative;height:min(68vh,620px);min-height:440px;overflow:hidden;border:1px solid #24212d;border-radius:24px;background:radial-gradient(circle at 50% 28%,#2b2734 0,#17151d 42%,#0d0c11 76%)}.floor{position:absolute;left:50%;bottom:8%;width:56%;height:9%;transform:translateX(-50%);background:radial-gradient(ellipse,#0008,#0000 72%);filter:blur(8px)}.scene{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;perspective:1100px;touch-action:none;-webkit-user-select:none;user-select:none}.shirtWrap{width:78%;max-width:480px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;transform-style:preserve-3d;will-change:transform}.shirtWrap svg{width:100%;height:100%;filter:drop-shadow(0 28px 24px rgba(0,0,0,.45));pointer-events:none}.controls{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.controls button{border:1px solid #3a334b;background:#17141d;color:#fff;padding:14px;border-radius:13px;font-weight:800;font-size:14px}.readout{text-align:center;margin-top:10px;color:#a985ff;font-weight:800}.status{margin-top:10px;padding:11px 13px;border:1px solid #282330;border-radius:13px;background:#111016;color:#d9d3e7;font-size:13px}.ok{color:#a985ff;font-weight:800}@media(max-width:520px){.stage{height:62vh;min-height:430px}.shirtWrap{width:90%}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top"><div class="brand">AURA<span>WRK</span></div><div class="badge">GITHUB TEST</div></div>
+  <div class="stage">
+    <div class="floor"></div>
+    <div class="scene" id="scene">
+      <div class="shirtWrap" id="shirtWrap">
+        <svg viewBox="0 0 600 600" aria-label="AURAWRK shirt">
+          <defs>
+            <linearGradient id="fabric" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff"/><stop offset=".35" stop-color="#ededf0"/><stop offset=".68" stop-color="#cfcfd6"/><stop offset="1" stop-color="#f7f7f8"/></linearGradient>
+            <radialGradient id="chest" cx="50%" cy="38%" r="60%"><stop offset="0" stop-color="#fff" stop-opacity=".95"/><stop offset=".55" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#868690" stop-opacity=".30"/></radialGradient>
+          </defs>
+          <path d="M211 142 L126 178 Q106 187 94 216 L59 303 Q52 320 71 329 L127 355 Q143 362 151 347 L181 285 L198 252 Z" fill="url(#fabric)" stroke="#bcbcc4" stroke-width="2"/>
+          <path d="M389 142 L474 178 Q494 187 506 216 L541 303 Q548 320 529 329 L473 355 Q457 362 449 347 L419 285 L402 252 Z" fill="url(#fabric)" stroke="#bcbcc4" stroke-width="2"/>
+          <path d="M210 142 Q246 121 274 118 Q300 127 326 118 Q354 121 390 142 L414 236 L394 507 Q393 526 374 531 Q300 548 226 531 Q207 526 206 507 L186 236 Z" fill="url(#fabric)" stroke="#b8b8c1" stroke-width="2"/>
+          <path d="M210 142 Q246 121 274 118 Q300 127 326 118 Q354 121 390 142 L414 236 L394 507 Q393 526 374 531 Q300 548 226 531 Q207 526 206 507 L186 236 Z" fill="url(#chest)"/>
+          <path d="M256 124 Q300 168 344 124" fill="none" stroke="#a8a8b2" stroke-width="18" stroke-linecap="round"/>
+          <path d="M263 123 Q300 151 337 123" fill="none" stroke="#f6f6f7" stroke-width="10" stroke-linecap="round"/>
+          <text x="300" y="286" text-anchor="middle" font-size="38" font-weight="900" fill="#17151c" letter-spacing="5">AURAWRK</text>
+          <text x="300" y="319" text-anchor="middle" font-size="14" fill="#7250ca" letter-spacing="3">CREATE YOUR AURA</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <div class="controls"><button id="left" type="button">↶ ROTATE LEFT</button><button id="right" type="button">ROTATE RIGHT ↷</button></div>
+  <div class="readout" id="angle">ANGLE: -8°</div>
+  <div class="status" id="status"><span class="ok">READY:</span> drag the shirt or use the buttons.</div>
+</div>
+<script>
+(function(){
+  'use strict';
+  var scene=document.getElementById('scene');
+  var shirt=document.getElementById('shirtWrap');
+  var angle=document.getElementById('angle');
+  var status=document.getElementById('status');
+  var left=document.getElementById('left');
+  var right=document.getElementById('right');
+  var rotY=-8, rotX=4, scale=1, dragging=false, sx=0, sy=0, baseY=0, baseX=0;
+  function draw(){
+    shirt.style.transform='rotateX('+rotX+'deg) rotateY('+rotY+'deg) scale('+scale+')';
+    angle.textContent='ANGLE: '+Math.round(rotY)+'°';
+    document.documentElement.setAttribute('data-angle',String(Math.round(rotY)));
+  }
+  function rotateBy(n){rotY+=n;draw();status.innerHTML='<span class="ok">WORKING:</span> rotation changed.';}
+  function start(x,y){dragging=true;sx=x;sy=y;baseY=rotY;baseX=rotX;status.innerHTML='<span class="ok">DRAGGING:</span> move left or right.';}
+  function move(x,y){if(!dragging)return;rotY=baseY+(x-sx)*0.35;rotX=Math.max(-18,Math.min(18,baseX-(y-sy)*0.12));draw();}
+  function end(){dragging=false;}
+  left.addEventListener('click',function(){rotateBy(-25)});
+  right.addEventListener('click',function(){rotateBy(25)});
+  scene.addEventListener('pointerdown',function(e){start(e.clientX,e.clientY); if(scene.setPointerCapture){try{scene.setPointerCapture(e.pointerId)}catch(_){}}});
+  scene.addEventListener('pointermove',function(e){move(e.clientX,e.clientY)});
+  scene.addEventListener('pointerup',end);
+  scene.addEventListener('pointercancel',end);
+  draw();
+  document.documentElement.setAttribute('data-js','ready');
+})();
+</script>
+</body>
+</html>
